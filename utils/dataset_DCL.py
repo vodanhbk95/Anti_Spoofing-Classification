@@ -43,7 +43,6 @@ class dataset(data.Dataset):
         elif isinstance(anno, dict):
             self.paths = anno['img_name']
             self.labels = anno['label']
-        # import ipdb; ipdb.set_trace()
         if train_val:
             self.paths, self.labels = random_sample(self.paths, self.labels)
         self.common_aug = common_aug
@@ -59,7 +58,6 @@ class dataset(data.Dataset):
 
     def __getitem__(self, item):
         img_path = os.path.join(self.root_path, self.paths[item])
-        # import ipdb; ipdb.set_trace()
         img = self.pil_loader(img_path)
         if self.test:
             img = self.totensor(img)
@@ -98,7 +96,6 @@ class dataset(data.Dataset):
             return img_unswap, label, label_swap, swap_law1, swap_law2, self.paths[item]
 
     def pil_loader(self,imgpath):
-        # import ipdb; ipdb.set_trace()
         with open(imgpath, 'rb') as f:
             with Image.open(f) as img:
                 return img.convert('RGB')

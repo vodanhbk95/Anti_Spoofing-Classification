@@ -20,11 +20,12 @@ def load_data_transformers(resize_reso=512, crop_reso=448, swap_num=[7, 7]):
             transforms.Resize((resize_reso, resize_reso)),
             transforms.RandomRotation(degrees=15),
             transforms.RandomCrop((crop_reso,crop_reso)),
+            transforms.RandomResizedCrop(resize_reso, scale=(0.9, 1.1)),
+            transforms.ColorJitter(0.4,0.4,0.4,0.1),
             transforms.RandomHorizontalFlip(),
         ]),
         'train_totensor': transforms.Compose([
             transforms.Resize((crop_reso, crop_reso)),
-            # ImageNetPolicy(),
             transforms.ToTensor(),
             transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225]),
         ]),

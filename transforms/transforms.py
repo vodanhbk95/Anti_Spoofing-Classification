@@ -408,6 +408,7 @@ class RandomCrop(object):
             tuple: params (i, j, h, w) to be passed to ``crop`` for random crop.
         """
         w, h = img.size
+        # import ipdb; ipdb.set_trace()
         th, tw = output_size
         if w == tw and h == th:
             return 0, 0, h, w

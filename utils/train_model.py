@@ -108,6 +108,7 @@ def train(Config,
             beta_ = 1
             gamma_ = 0.01 if Config.dataset == 'STCAR' or Config.dataset == 'AIR' else 1
             if Config.use_dcl:
+                import ipdb; ipdb.set_trace()
                 swap_loss = get_ce_loss(outputs[1], labels_swap) * beta_
                 loss += swap_loss
                 law_loss = add_loss(outputs[2], swap_law) * gamma_
