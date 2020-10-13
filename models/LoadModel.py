@@ -4,6 +4,7 @@ import torch
 from torchvision import models, transforms, datasets
 import torch.nn.functional as F
 import pretrainedmodels
+from torchsummary import summary
 
 from config import pretrained_model
 
@@ -14,7 +15,6 @@ class MainModel(nn.Module):
         super(MainModel, self).__init__()
         self.use_dcl = config.use_dcl
         self.num_classes = config.numcls
-        # import ipdb; ipdb.set_trace()
         self.backbone_arch = config.backbone
         self.use_Asoftmax = config.use_Asoftmax
         print(self.backbone_arch)
@@ -79,3 +79,7 @@ class MainModel(nn.Module):
                 out.append(self.Aclassifier(last_x))
 
         return out
+
+if __name__ == '__main__':
+    model = MainModel()
+    summary(model, (3, 112, 112))

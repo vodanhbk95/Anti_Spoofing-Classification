@@ -94,24 +94,25 @@ class LoadConfig(object):
         # path/image_name cls_num\n
 
         if 'train' in get_list:
-             self.train_anno = pd.read_csv(os.path.join(self.anno_root, 'data_train_all.csv'),\
-                                           sep=" ",\
-                                           header=None,\
-                                        #    names=['ImageName', 'label']
-                                           names=['images', 'label'])
+            # import ipdb; ipdb.set_trace()
+            self.train_anno = pd.read_csv(os.path.join(self.anno_root, 'data_train_all.csv'))
+                                        #    sep=" ",\
+                                        #    header=None,\
+                                        # #    names=['ImageName', 'label']
+                                        #    names=['images', 'label'])
 
         if 'val' in get_list:
-            self.val_anno = pd.read_csv(os.path.join(self.anno_root, 'data_test_all.csv'),\
-                                           sep=" ",\
-                                           header=None,\
-                                        #    names=['ImageName', 'label']
-                                           names=['images', 'label'])
+            self.val_anno = pd.read_csv(os.path.join(self.anno_root, 'data_test_all.csv'))
+                                        #    sep=" ",\
+                                        #    header=None,\
+                                        # #    names=['ImageName', 'label']
+                                        #    names=['images', 'label'])
 
         if 'test' in get_list:
-            self.test_anno = pd.read_csv(os.path.join(self.anno_root, 'ct_test.txt'),\
-                                           sep=" ",\
-                                           header=None,\
-                                           names=['ImageName', 'label'])
+            self.test_anno = pd.read_csv(os.path.join(self.anno_root, 'ct_test.txt'))
+                                        #    sep=" ",\
+                                        #    header=None,\
+                                        #    names=['ImageName', 'label'])
 
         self.swap_num = args.swap_num
 

@@ -36,13 +36,14 @@ class dataset(data.Dataset):
         self.dataset = Config.dataset
         self.use_cls_2 = Config.cls_2
         self.use_cls_mul = Config.cls_2xmul
+        
         if isinstance(anno, pandas.core.frame.DataFrame):
             self.paths = anno['images'].tolist()
             self.labels = anno['label'].tolist()
         elif isinstance(anno, dict):
             self.paths = anno['img_name']
             self.labels = anno['label']
-
+        # import ipdb; ipdb.set_trace()
         if train_val:
             self.paths, self.labels = random_sample(self.paths, self.labels)
         self.common_aug = common_aug
@@ -58,7 +59,7 @@ class dataset(data.Dataset):
 
     def __getitem__(self, item):
         img_path = os.path.join(self.root_path, self.paths[item])
-        import ipdb; ipdb.set_trace()
+        # import ipdb; ipdb.set_trace()
         img = self.pil_loader(img_path)
         if self.test:
             img = self.totensor(img)

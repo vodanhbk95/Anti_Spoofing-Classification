@@ -23,7 +23,7 @@ from utils.dataset_DCL import collate_fn4train, collate_fn4val, collate_fn4test,
 import pdb
 
 os.environ['CUDA_DEVICE_ORDRE'] = 'PCI_BUS_ID'
-os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2,3'
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1'
 
 # parameters setting
 def parse_args():
@@ -56,7 +56,7 @@ def parse_args():
     parser.add_argument('--start_epoch', dest='start_epoch',
                         default=0,  type=int)
     parser.add_argument('--tnw', dest='train_num_workers',
-                        default=16, type=int)
+                        default=0, type=int)
     parser.add_argument('--vnw', dest='val_num_workers',
                         default=32, type=int)
     parser.add_argument('--detail', dest='discribe',
@@ -90,10 +90,8 @@ if __name__ == '__main__':
     args = parse_args()
     print(args, flush=True)
     Config = LoadConfig(args, 'train')
-    # import ipdb; ipdb.set_trace()
     Config.cls_2 = args.cls_2
     Config.cls_2xmul = args.cls_mul
-    # import ipdb; ipdb.set_trace()
     assert Config.cls_2 ^ Config.cls_2xmul
 
     transformers = load_data_transformers(args.resize_resolution, args.crop_resolution, args.swap_num)
