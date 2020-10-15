@@ -32,7 +32,7 @@ def train(Config,
           save_dir,
           data_size=448,
           savepoint=500,
-          checkpoint=1000
+          checkpoint=10
           ):
     # savepoint: save without evalution
     # checkpoint: save with evaluation
@@ -108,7 +108,7 @@ def train(Config,
             beta_ = 1
             gamma_ = 0.01 if Config.dataset == 'STCAR' or Config.dataset == 'AIR' else 1
             if Config.use_dcl:
-                import ipdb; ipdb.set_trace()
+                # import ipdb; ipdb.set_trace()
                 swap_loss = get_ce_loss(outputs[1], labels_swap) * beta_
                 loss += swap_loss
                 law_loss = add_loss(outputs[2], swap_law) * gamma_
@@ -121,7 +121,8 @@ def train(Config,
             torch.cuda.synchronize()
 
             if Config.use_dcl:
-                print('step: {:-8d} / {:d} loss=ce_loss+swap_loss+law_loss: {:6.4f} = {:6.4f} + {:6.4f} + {:6.4f} '.format(step, train_epoch_step, loss.detach().item(), ce_loss.detach().item(), swap_loss.detach().item(), law_loss.detach().item()), flush=True)
+                if step % 50 == 0:
+                    print('step: {:-8d} / {:d} loss=ce_loss+swap_loss+law_loss: {:6.4f} = {:6.4f} + {:6.4f} + {:6.4f} '.format(step, train_epoch_step, loss.detach().item(), ce_loss.detach().item(), swap_loss.detach().item(), law_loss.detach().item()), flush=True)
             if Config.use_backbone:
                 print('step: {:-8d} / {:d} loss=ce_loss+swap_loss+law_loss: {:6.4f} = {:6.4f} '.format(step, train_epoch_step, loss.detach().item(), ce_loss.detach().item()), flush=True)
             rec_loss.append(loss.detach().item())
@@ -129,19 +130,22 @@ def train(Config,
             train_loss_recorder.update(loss.detach().item())
 
             # evaluation & save
+            # print('checkpoint: ', checkpoint)
+            # checkpoint=1
             if step % checkpoint == 0:
                 rec_loss = []
                 print(32*'-', flush=True)
                 print('step: {:d} / {:d} global_step: {:8.2f} train_epoch: {:04d} rec_train_loss: {:6.4f}'.format(step, train_epoch_step, 1.0*step/train_epoch_step, epoch, train_loss_recorder.get_val()), flush=True)
                 print('current lr:%s' % exp_lr_scheduler.get_lr(), flush=True)
-                if eval_train_flag:
-                    trainval_acc1, trainval_acc2, trainval_acc3 = eval_turn(Config, model, data_loader['trainval'], 'trainval', epoch, log_file)
-                    if abs(trainval_acc1 - trainval_acc3) < 0.01:
-                        eval_train_flag = False
+                # if eval_train_flag:
+                #     trainval_acc1, trainval_acc2, trainval_acc3 = eval_turn(Config, model, data_loader['trainval'], 'trainval', epoch, log_file)
+                #     if abs(trainval_acc1 - trainval_acc3) < 0.01:
+                #         eval_train_flag = False
 
-                val_acc1, val_acc2, val_acc3 = eval_turn(Config, model, data_loader['val'], 'val', epoch, log_file)
+                # val_acc1, val_acc2, val_acc3 = eval_turn(Config, model, data_loader['val'], 'val', epoch, log_file)
+                tpr_list_0, tpr_list_1, tpr_list_2 = eval_turn(Config, model, data_loader['trainval'], 'trainval', epoch, log_file)
 
-                save_path = os.path.join(save_dir, 'weights_%d_%d_%.4f_%.4f.pth'%(epoch, batch_cnt, val_acc1, val_acc3))
+                save_path = os.path.join(save_dir, 'weights_%d_%d_%.4f_%.4f_%.4f.pth'%(epoch, batch_cnt, tpr_list_0, tpr_list_1, tpr_list_2))
                 torch.cuda.synchronize()
                 torch.save(model.state_dict(), save_path)
                 print('saved model to %s' % (save_path), flush=True)

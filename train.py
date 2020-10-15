@@ -112,12 +112,12 @@ if __name__ == '__main__':
                         train = False,
                         train_val = True)
 
-    val_set = dataset(Config = Config,\
-                      anno = Config.val_anno,\
-                      common_aug = transformers["None"],\
-                      swap = transformers["None"],\
-                      totensor = transformers["test_totensor"],\
-                      test=True)
+    # val_set = dataset(Config = Config,\
+    #                   anno = Config.val_anno,\
+    #                   common_aug = transformers["None"],\
+    #                   swap = transformers["None"],\
+    #                   totensor = transformers["test_totensor"],\
+    #                   test=True)
 
     dataloader = {}
     dataloader['train'] = torch.utils.data.DataLoader(train_set,\
@@ -141,16 +141,16 @@ if __name__ == '__main__':
     setattr(dataloader['trainval'], 'total_item_len', len(trainval_set))
     setattr(dataloader['trainval'], 'num_cls', Config.numcls)
 
-    dataloader['val'] = torch.utils.data.DataLoader(val_set,\
-                                                batch_size=args.val_batch,\
-                                                shuffle=False,\
-                                                num_workers=args.val_num_workers,\
-                                                collate_fn=collate_fn4test if not Config.use_backbone else collate_fn4backbone,
-                                                drop_last=True if Config.use_backbone else False,
-                                                pin_memory=True)
+    # dataloader['val'] = torch.utils.data.DataLoader(val_set,\
+    #                                             batch_size=args.val_batch,\
+    #                                             shuffle=False,\
+    #                                             num_workers=args.val_num_workers,\
+    #                                             collate_fn=collate_fn4test if not Config.use_backbone else collate_fn4backbone,
+    #                                             drop_last=True if Config.use_backbone else False,
+    #                                             pin_memory=True)
 
-    setattr(dataloader['val'], 'total_item_len', len(val_set))
-    setattr(dataloader['val'], 'num_cls', Config.numcls)
+    # setattr(dataloader['val'], 'total_item_len', len(val_set))
+    # setattr(dataloader['val'], 'num_cls', Config.numcls)
 
 
     cudnn.benchmark = True

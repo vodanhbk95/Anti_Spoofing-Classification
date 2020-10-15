@@ -46,19 +46,23 @@ class MainModel(nn.Module):
             if config.cls_2xmul:
                 self.classifier_swap = nn.Linear(2048, 2*self.num_classes, bias=False)
             self.Convmask = nn.Conv2d(2048, 1, 1, stride=1, padding=0, bias=True)
-            self.avgpool2 = nn.AvgPool2d(2, stride=2)
+            self.avgpool2 = nn.AvgPool2d(3, stride=1, padding=1)
 
         if self.use_Asoftmax:
             self.Aclassifier = AngleLinear(2048, self.num_classes, bias=False)
 
     def forward(self, x, last_cont=None):
         x = self.model(x)
+        # print('Feature x:')
+        # print(x.shape)
         if self.use_dcl:
             mask = self.Convmask(x)
+            # print("mask Convmask",mask.shape)
             mask = self.avgpool2(mask)
+            # print("mask avgpool2",mask.shape)
             mask = torch.tanh(mask)
             mask = mask.view(mask.size(0), -1)
-
+        # print("mask", mask.shape)
         x = self.avgpool(x)
         x = x.view(x.size(0), -1)
         out = []
@@ -78,8 +82,9 @@ class MainModel(nn.Module):
                 last_x = last_x.view(last_x.size(0), -1)
                 out.append(self.Aclassifier(last_x))
 
+        # print("out:",len(out), out[0].shape, out[1].shape, out[2].shape)
         return out
 
-if __name__ == '__main__':
-    model = MainModel()
-    summary(model, (3, 112, 112))
+# if __name__ == '__main__':
+#     model = MainModel()
+#     summary(model, (3, 112, 112))

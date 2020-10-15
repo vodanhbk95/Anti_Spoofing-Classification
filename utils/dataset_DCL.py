@@ -30,7 +30,7 @@ def random_sample(img_names, labels):
 
 
 class dataset(data.Dataset):
-    def __init__(self, Config, anno, swap_size=[7,7], common_aug=None, swap=None, totensor=None, train=False, train_val=False, test=False):
+    def __init__(self, Config, anno, swap_size=[6,6], common_aug=None, swap=None, totensor=None, train=False, train_val=False, test=False):
         self.root_path = Config.rawdata_root
         self.numcls = Config.numcls
         self.dataset = Config.dataset
@@ -69,7 +69,7 @@ class dataset(data.Dataset):
 
         swap_range = self.swap_size[0] * self.swap_size[1]
         swap_law1 = [(i-(swap_range//2))/swap_range for i in range(swap_range)]
-
+        # print("Swap_law1:", len(swap_law1))
         if self.train:
             img_swap = self.swap(img_unswap)
             image_swap_list = self.crop_image(img_swap, self.swap_size)
@@ -80,6 +80,7 @@ class dataset(data.Dataset):
                 distance = [abs(swap_im - unswap_im) for unswap_im in unswap_stats]
                 index = distance.index(min(distance))
                 swap_law2.append((index-(swap_range//2))/swap_range)
+            # print("swap_law2:", len(swap_law2))
             img_swap = self.totensor(img_swap)
             label = self.labels[item]
             if self.use_cls_mul:
