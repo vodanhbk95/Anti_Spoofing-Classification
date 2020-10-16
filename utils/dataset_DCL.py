@@ -30,7 +30,7 @@ def random_sample(img_names, labels):
 
 
 class dataset(data.Dataset):
-    def __init__(self, Config, anno, swap_size=[6,6], common_aug=None, swap=None, totensor=None, train=False, train_val=False, test=False):
+    def __init__(self, Config, anno, swap_size=[3,3], common_aug=None, swap=None, totensor=None, train=False, train_val=False, test=False):
         self.root_path = Config.rawdata_root
         self.numcls = Config.numcls
         self.dataset = Config.dataset
